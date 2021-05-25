@@ -48,7 +48,7 @@ app.post('/artist', (req, res) => {
   console.log('In /artist POST');
   // ⬇ Declare variable for SQL queries:
   let queryText = `INSERT INTO "artist" ("name", "birthdate")
-  VALUES ($1, $2);`
+  VALUES ($1, $2);`;
   // ⬇ Sanitize your inputs:
   let values = [req.body.name, req.body.birthdate];
   // ⬇ Setup pool.query to communicate:
@@ -80,7 +80,20 @@ app.get('/song', (req, res) => {
 
 // ⬇ POST /song route to DB:
 app.post('/song', (req, res) => {
-    songList.push(req.body);
-    res.sendStatus(201);
+  console.log('In /song POST');
+  // ⬇ Declare variable for SQL queries:
+  let queryText = `INSERT INTO "song" ("title", "length", "released")
+  VALUES ($1, $2, $3);`;
+  // ⬇ Sanitize your inputs:
+  let values = [req.body.title, req.body.length, req.body.released];
+  // ⬇ Setup pool.query to communicate:
+  pool.query( queryText, values )
+  .then( result => {
+    console.log( result.rows );
+    res.sendStatus( 201 ); // CREATED. 
+  }).catch( error => {
+    console.log( error );
+    res.sendStatus( 500 ); // SERVER ERROR. 
+  }); // End pool.query call.
 });
 //#endregion ⬆⬆ All GET & POST routes above. 
