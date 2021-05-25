@@ -1,15 +1,29 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-
+//#region ⬇⬇ Server functionality setup below:
+// ⬇ Express & bodyParser setup:
+const express = require( 'express' );
+const bodyParser = require( 'body-parser' );
 const app = express();
 const PORT = 5000;
-
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static('server/public'));
-
+app.use(bodyParser.urlencoded( {extended: true} ));
+app.use(express.static( 'server/public' ));
 app.listen(PORT, () => {
-    console.log('listening on port', PORT)
+    console.log( 'Server running on port:', PORT )
 });
+// ⬇ PG setup:
+const pg = require( 'pg' );
+const Pool = pg.Pool;
+const pool = new Pool({
+  database: 'jazzy_sql', // Needs to match whatever it's named as in Postico. 
+  host: 'localhost',
+  port: 5432, // Where the database is running, not our server on 5000. 
+});
+pool.on( 'connect', () => {
+  console.log( 'Connected to POSTGRES' );
+});
+pool.on( 'error', error => {
+  console.log( 'Error to POSTGRES:', error );
+});
+//#endregion ⬆⬆ Server functionality setup setup above. 
 
 // TODO - Replace static content with a database tables
 const artistList = [ 
