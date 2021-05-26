@@ -70,7 +70,7 @@ app.get('/song', (req, res) => {
   // ⬇ Setup pool.query to communicate:
   pool.query( queryText )
   .then( result => {
-    console.log( result.rows ); // Have to narrow down our data? 
+    console.log( result.rows ); // Data from get will always be result.rows. 
     res.send(  result.rows );
   }).catch( error => { // If pool.query fails:
     console.log( error );
