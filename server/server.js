@@ -15,40 +15,10 @@ const pool = require( './modules/pool' );
 
 
 //#region ⬇⬇ All GET & POST routes below: 
-// ⬇ GET /artist route to DB:
-app.get('/artist', (req, res) => {
-  console.log(`In /artist GET`);
-  // ⬇ Declare variable for SQL queries:
-  const queryText = `SELECT * FROM "artist" ORDER BY "birthdate" DESC;`;
-  // ⬇ Setup pool.query to communicate:
-  pool.query( queryText )
-  .then( result => {
-    console.log( result.rows ); // Have to narrow down our data? 
-    res.send(  result.rows );
-  }).catch( error => { // If pool.query fails:
-    console.log( error );
-    res.sendStatus( 500 ); // Server error, not client error. 
-  }); // End pool.query call. 
-}); // End GET /artist route. 
+// ⬇ GET & POST /artist route to DB:
+let artist = require( './routes/artist' );
+app.use( '/artist', artist );
 
-// ⬇ POST /artist route to DB: 
-app.post('/artist', (req, res) => {
-  console.log('In /artist POST');
-  // ⬇ Declare variable for SQL queries:
-  let queryText = `INSERT INTO "artist" ("name", "birthdate")
-  VALUES ($1, $2);`;
-  // ⬇ Sanitize your inputs:
-  let values = [req.body.name, req.body.birthdate];
-  // ⬇ Setup pool.query to communicate:
-  pool.query( queryText, values )
-  .then( result => {
-    console.log( result.rows );
-    res.sendStatus( 201 ); // CREATED. 
-  }).catch( error => {
-    console.log( error );
-    res.sendStatus( 500 ); // SERVER ERROR. 
-  }); // End pool.query call.
-}); // End POST /artist route. 
 
 // ⬇ GET /song route to DB: 
 app.get('/song', (req, res) => {
