@@ -19,39 +19,7 @@ const pool = require( './modules/pool' );
 let artist = require( './routes/artist' );
 app.use( '/artist', artist );
 
-
-// ⬇ GET /song route to DB: 
-app.get('/song', (req, res) => {
-  console.log(`In /song GET`);
-  // ⬇ Declare variable for SQL queries:
-  const queryText = `SELECT * FROM "song" ORDER BY "title" ASC;`;
-  // ⬇ Setup pool.query to communicate:
-  pool.query( queryText )
-  .then( result => {
-    console.log( result.rows ); // Data from get will always be result.rows. 
-    res.send(  result.rows );
-  }).catch( error => { // If pool.query fails:
-    console.log( error );
-    res.sendStatus( 500 ); // Server error, not client error. 
-  }); // End pool.query call. 
-});
-
-// ⬇ POST /song route to DB:
-app.post('/song', (req, res) => {
-  console.log('In /song POST');
-  // ⬇ Declare variable for SQL queries:
-  let queryText = `INSERT INTO "song" ("title", "length", "released")
-  VALUES ($1, $2, $3);`;
-  // ⬇ Sanitize your inputs:
-  let values = [req.body.title, req.body.length, req.body.released];
-  // ⬇ Setup pool.query to communicate:
-  pool.query( queryText, values )
-  .then( result => {
-    console.log( result.rows );
-    res.sendStatus( 201 ); // CREATED. 
-  }).catch( error => {
-    console.log( error );
-    res.sendStatus( 500 ); // SERVER ERROR. 
-  }); // End pool.query call.
-});
+// ⬇ GET & POST /song route to DB:
+let song = require( './routes/song' );
+app.use( '/song', song );
 //#endregion ⬆⬆ All GET & POST routes above. 
